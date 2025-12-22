@@ -10,7 +10,7 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 class evaluate:
     def __init__(self, input_data, design_matrix, feature, model: BINN):
         self.model = model
-        with open('/home/zxl/hdd/cellfate/data/Gene_and_network1.pkl', 'rb') as file:
+        with open('/data/Gene_and_network.pkl', 'rb') as file:
             data = pickle.load(file)
         connectivity_matrices_list = data
         self.B_cell_connectivity_matrices = connectivity_matrices_list['B_cell_connectivity_matrices']
