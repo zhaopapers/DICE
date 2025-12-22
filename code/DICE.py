@@ -10,7 +10,7 @@ import dill
 from torch import nn as nn
 import pickle
 from sklearn.utils.class_weight import compute_class_weight
-class based_cell_train:
+class DICE:
     def __init__(self, model: BINN, explainer, temperature_init=1.0, lr=0.001, residual=True):
         self.model = model
         #self.n_layers = model.n_layers
@@ -304,3 +304,4 @@ class based_cell_train:
             features = list(features)
             data_matrix = data_matrix.loc[features]
         return data_matrix ,features
+
