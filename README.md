@@ -1,36 +1,30 @@
-# CITMIC
+# DICE
 [![Current devel version: 0.1.2](https://img.shields.io/badge/devel%20version-0.1.2-blue.svg)](https://github.com/zhaopapers/CITMIC)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2ba2ad32650d469588a16de5ae2a5ed1)](https://app.codacy.com/gh/zhaopapers/CITMIC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
-CITMIC is a method for estimate cell infiltration score
+DICE: Decoding Immune Cell Differentiation for Tumor-Type Prediction and Mechanism Interpretation
 
 ## Introduction
 
-`CITMIC` can infer the cell infiltration of the TME by simultaneously measuring 86 different cell types, constructing an individualized cell-cell crosstalk network based on functional similarities between cells, and using only gene transcription data. This is a novel approach to estimate the relative cell infiltration levels, and which were shown to be superior to the current methods.
+`DICE` can combines prior knowledge of immune cell differentiation with biological processes to construct a biologically neural network model for tumor type prediction. This is a novel approach  employed feature attribution techniques to conduct an introspective analysis of the model, thereby identifying key immune cell types, biological processes, and genes within differentiation processes that distinguish different cancer types. In conclusion, DICE has been demonstrated to provide a novel tool for clinical pathological diagnosis, offering new insights into the mechanisms of immune cell differentiation within the tumor microenvironment.
 
-![A simple schema of the CITMIC](man/figures/info.jpg)
+![A simple schema of the DICE](man/figures/info.jpg)
 
 ## A notice on operating system compatibility
-- We recommend using as input the gene expression matrix normalized by log2(fpkm+1).
-- If your computer has multiple CPU cores, we recommend that you select the number of cl.cores to apply to CITMIC based on `parallel::detectCores()`. He will greatly improve the efficiency of the function's operation.
-- **R (≥ 4.2.0)**: We developed this R package using R version 4.3.x.
-  
+- We recommend using as input the gene expression matrix normalized by log2(fpkm+0.001).
 
-## Installation
 
-Install `CITMIC` using:
-
-``` r
-install.packages(c('devtools', 'BiocManager'))
-remotes::install_github("zhaopapers/CITMIC")
+## Environment set up
+installing Anaconda, you can create a virtual environment named DICE and install the required packages based on the environment.yml file using the following command:
+``` Python (version 3.10.9)
+``` Anaconda
+conda env create -f environment.yml
 ```
 
 ## Usage
 
-Load the package using `library(CITMIC)`. We provide a vignette for the package that can be called using: `vignette("CITMIC")`. 
-Alternatively, you can view the online version on [CRAN](doc/labyrinth_knit.md), The examples I provided would take several minutes to run on a normal desktop computer. Basically that is all you have to know.
 
 ## Citation
 Those codes and the CITMIC package are intended for research use only. 
