@@ -25,7 +25,8 @@ conda env create -f environment.yml
 
 ## Usage
 #Usage for base_cell.ipynb
-The base_cell.ipynb notebook serves as the main entry point for training the Biologically Informed Neural Network (BINN). It orchestrates data loading, network graph construction, model initialization, and the training loop with interpretability analysis.
+The base_cell.ipynb notebook serves as the main entry point for training the Biologically Informed Neural Network (BINN). 
+It orchestrates data loading, network graph construction, model initialization, and the training loop with interpretability analysis.
 Data
 Before running the notebook, ensure you have prepared the four required CSV files.
 test_input_data:Gene Expression Matrix,which here refers to single-cell data with genes as rows and cells as columns.
