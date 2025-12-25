@@ -41,14 +41,39 @@ network = Network(
     source_column="source",    # Column name in pathway file for source nodes
     target_column="target"     # Column name in pathway file for target nodes
 )
-
-Parameter,Default,Description
--n_layers,4,Number of hidden layers (biological hierarchy levels) to use.
--activation,"""tanh""",Activation function for hidden layers.
--activation_final,"""sigmoid""",Activation function for the final classification layer/residual blocks.
--dropout,0.2,Dropout rate to prevent overfitting.
--learning_rate,0.001,Initial learning rate for the Adam optimizer.
--device,"""cuda""","Compute device (""cpu"" or ""cuda"")."
+Model Hyperparameters
+-n_layers is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
+-activation is the activation function for hidden layers with a default value of "tanh"; 
+-activation_final is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
+-dropout is the dropout rate to prevent overfitting with a default value of 0.2; 
+-learning_rate is the initial learning rate for the Adam optimizer with a default value of 0.001; 
+-device is the compute device ("cpu" or "cuda") with a default value of "cuda".
+Training & Validation
+The training process is handled by the based_cell_train wrapper, which performs Stratified K-Fold cross-validation and SHAP-based feature importance calculation.
+To start training, execute the relevant cell in the notebook:
+trainer = based_cell_train(binn, explainer)
+df, return_dict = trainer.fit(
+    input_data=test_input_data,
+    design_matrix=test_input_sign,
+    nr_iterations=10,      # Number of total training iterations
+    n_folds=3,             # Number of folds for Cross-Validation
+    max_epochs=100,        # Maximum training epochs per fold
+    batch_size=16,         # Batch size
+    num_workers=20,        # Number of CPU workers for data loading
+    dir="./models/"        # Directory to save model checkpoints (.pth) and variables
+)
+Outputs
+After execution, the notebook generates two primary CSV files and several checkpoints:
+1. Feature Importance File (proB_preB_output_file_GSE160927.csv)
+Contains the SHAP values explaining the model's decisions.
+Columns: source, target, source name, target name, value (SHAP value), type (class), spilt (fold index).
+2. Metrics File (proB_preB_return_dict_GSE160927.csv)
+Contains performance metrics for each iteration and fold.
+Metrics: test_acc, test_AUC, test_F1, val_acc, val_loss, train_loss.
+3. Model Checkpoints
+Located in the directory specified by the dir parameter in trainer.fit():
+model_inter{iteration}_fold{fold}.pth: Saved model weights.
+variables{iteration}_fold{fold}.pkl: Serialized test data used for SHAP explanation.
 
 
 
