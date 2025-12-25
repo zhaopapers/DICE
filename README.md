@@ -101,9 +101,11 @@ Columns: source, target, source name, target name, value (SHAP value), type (cla
 Contains performance metrics for each iteration and fold.
 Metrics: test_acc, test_AUC, test_F1, val_acc, val_loss, train_loss.
 
-3. Model Checkpoints
+3.` Model Checkpoints`
 Located in the directory specified by the dir parameter in trainer.fit():
+
 `model_inter{iteration}_fold{fold}.pth: `Saved model weights.
+
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
 
