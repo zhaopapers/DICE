@@ -93,11 +93,11 @@ df, return_dict = trainer.fit(
 
 ####Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
-1. `Feature Importance File` (proB_preB_output_file_GSE160927.csv)
+1. Feature Importance File`proB_preB_output_file_GSE160927.csv`
 Contains the SHAP values explaining the model's decisions.
 Columns: source, target, source name, target name, value (SHAP value), type (class), spilt (fold index).
 
-2.` Metrics File` (proB_preB_return_dict_GSE160927.csv)
+2. Metrics File`proB_preB_return_dict_GSE160927.csv`
 Contains performance metrics for each iteration and fold.
 Metrics: test_acc, test_AUC, test_F1, val_acc, val_loss, train_loss.
 
