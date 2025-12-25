@@ -41,6 +41,13 @@ network = Network(
     source_column="source",    # Column name in pathway file for source nodes
     target_column="target"     # Column name in pathway file for target nodes
 )
+| File                              | Description                                                                   |
+|------------------------------------|------------------------------------------------------------------------|
+| binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
+| network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
+| based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
+| util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
+
 Model Hyperparameters
 -n_layers is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
 -activation is the activation function for hidden layers with a default value of "tanh"; 
