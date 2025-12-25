@@ -24,6 +24,33 @@ conda env create -f environment.yml
 ```
 
 ## Usage
+#Usage for base_cell.ipynb
+The base_cell.ipynb notebook serves as the main entry point for training the Biologically Informed Neural Network (BINN). It orchestrates data loading, network graph construction, model initialization, and the training loop with interpretability analysis.
+Data
+Before running the notebook, ensure you have prepared the four required CSV files.
+test_input_data:Gene Expression Matrix,which here refers to single-cell data with genes as rows and cells as columns.
+test_input_sign:Design Matrix.Must contain:- sample: Matches column names in the expression matrix.- group: Class labels (e.g., 1 and 2) used for stratification.
+test_pathways:Defines the edges of the biological graph.
+test_translation:Input Mapping.
+Network Construction
+network = Network(
+    input_data=test_input_data,
+    pathways=test_pathways,
+    mapping=test_translation,
+    input_data_column="Gene",  # Column name in your data matrix identifying features
+    source_column="source",    # Column name in pathway file for source nodes
+    target_column="target"     # Column name in pathway file for target nodes
+)
+
+Parameter,Default,Description
+-n_layers,4,Number of hidden layers (biological hierarchy levels) to use.
+-activation,"""tanh""",Activation function for hidden layers.
+-activation_final,"""sigmoid""",Activation function for the final classification layer/residual blocks.
+-dropout,0.2,Dropout rate to prevent overfitting.
+-learning_rate,0.001,Initial learning rate for the Adam optimizer.
+-device,"""cuda""","Compute device (""cpu"" or ""cuda"")."
+
+
 
 
 ## Citation
