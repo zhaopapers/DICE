@@ -66,10 +66,15 @@ network = Network(
 #### Model Hyperparameters
 
 `-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
+
 `-activation` is the activation function for hidden layers with a default value of "tanh"; 
+
 `-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
+
 `-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+
 `-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
+
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
 
 #### Training & Validation
