@@ -149,13 +149,13 @@ shap = SHAPExplainer(
             model=model,
             device="cuda:1"
         )
-##We systematically identify key biological features (critical genes, functional modules, and their interactions) across different differentiation stages via model interpretation approaches.
+##Key biological feature identification across differentiation stages via model interpretation
 shap.explain(
             output_dir="/model", 
             iteration=0
    
         )
-##This method can systematically quantify the key biological features that drive cancer classification across scales (cell differentiation subprocesses, biological functional modules, and regulatory genes).
+##Quantify key cancer-classifying features across scales.
 shap.explain_cell(
             output_dir="/model", 
             iteration=0
