@@ -101,7 +101,7 @@ Contains the SHAP values explaining the model's decisions.
 2. Metrics File `proB_preB_return_dict_GSE160927.csv`
 Contains performance metrics for each iteration and fold.
 
-3.Located in the directory specified by the dir parameter in trainer.fit():
+3. Located in the directory specified by the dir parameter in trainer.fit():
 
 `model_inter{iteration}_fold{fold}.pth: `Saved model weights.
 
