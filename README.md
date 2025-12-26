@@ -24,12 +24,13 @@ conda env create -f environment.yml
 ```
 
 ## Usage
-###Usage for base_cell.ipynb
+
+### Usage for base_cell.ipynb
 The base_cell.ipynb notebook serves as the main entry point for training the Biologically Informed Neural Network (BINN). 
 
 It orchestrates data loading, network graph construction, model initialization, and the training loop with interpretability analysis.
 
-####Data
+#### Data
 
 Before running the notebook, ensure you have prepared the four required CSV files.
 
@@ -41,7 +42,7 @@ Before running the notebook, ensure you have prepared the four required CSV file
 
 `test_translation:`Input Mapping.
 
-####Network Construction
+#### Network Construction
 
 ``` Python (version 3.10.9)
 ``` Anaconda
@@ -62,7 +63,7 @@ network = Network(
 | based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
 | util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
 
-####Model Hyperparameters
+#### Model Hyperparameters
 
 `-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
 `-activation` is the activation function for hidden layers with a default value of "tanh"; 
@@ -71,7 +72,7 @@ network = Network(
 `-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
 
-####Training & Validation
+#### Training & Validation
 
 The training process is handled by the based_cell_train wrapper, which performs Stratified K-Fold cross-validation and SHAP-based feature importance calculation.
 To start training, execute the relevant cell in the notebook:
@@ -91,15 +92,13 @@ df, return_dict = trainer.fit(
 )
 ```
 
-####Outputs
+#### Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
-1. Feature Importance File`proB_preB_output_file_GSE160927.csv`
+1. Feature Importance File `proB_preB_output_file_GSE160927.csv`
 Contains the SHAP values explaining the model's decisions.
-Columns: source, target, source name, target name, value (SHAP value), type (class), spilt (fold index).
 
-2. Metrics File`proB_preB_return_dict_GSE160927.csv`
+2. Metrics File `proB_preB_return_dict_GSE160927.csv`
 Contains performance metrics for each iteration and fold.
-Metrics: test_acc, test_AUC, test_F1, val_acc, val_loss, train_loss.
 
 3.Located in the directory specified by the dir parameter in trainer.fit():
 
