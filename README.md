@@ -111,10 +111,10 @@ Contains performance metrics for each iteration and fold.
 The main.ipynb notebook is designed for high-throughput model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
 
 #### Data
-test_input_data:A CSV file where rows are features (Genes) and columns are samples.
-test_input_sign:A CSV mapping samples to their ground-truth labels (e.g., classes 1–24).
-Pre-trained Models:Saved .pth files containing the trained BINN architecture and weights.
-Connectivity Maps:A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
+`test_input_data:` A CSV file where rows are features (Genes) and columns are samples.
+`test_input_sign:` A CSV mapping samples to their ground-truth labels (e.g., classes 1–24).
+`Pre-trained Models:` Saved .pth files containing the trained BINN architecture and weights.
+`Connectivity Maps:` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
 
 | File                              | Description                                                                   |
 |------------------------------------|------------------------------------------------------------------------|
@@ -140,13 +140,13 @@ shap = SHAPExplainer(
             model=model,
             device="cuda:1"
         )
-##
+##We systematically identify key biological features (critical genes, functional modules, and their interactions) across different differentiation stages via model interpretation approaches.
 shap.explain(
             output_dir="/model", 
             iteration=0
    
         )
-##
+##This method can systematically quantify the key biological features that drive cancer classification across scales (cell differentiation subprocesses, biological functional modules, and regulatory genes).
 shap.explain_cell(
             output_dir="/model", 
             iteration=0
@@ -154,6 +154,9 @@ shap.explain_cell(
         )
 ```
 #### Outputs
+`shap_values_iteration_{i}.csv` will be created in the output directory.Feature importance scores mapped to biological pathways for each predicted class.
+
+
 
 
 ## Citation
