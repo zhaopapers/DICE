@@ -111,9 +111,13 @@ Contains performance metrics for each iteration and fold.
 The main.ipynb notebook is designed for high-throughput model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
 
 #### Data
+
 `test_input_data:` A CSV file where rows are features (Genes) and columns are samples.
+
 `test_input_sign:` A CSV mapping samples to their ground-truth labels (e.g., classes 1–24).
+
 `Pre-trained Models:` Saved .pth files containing the trained BINN architecture and weights.
+
 `Connectivity Maps:` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
 
 | File                              | Description                                                                   |
