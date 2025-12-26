@@ -94,6 +94,7 @@ df, return_dict = trainer.fit(
 
 #### Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
+
 1. Feature Importance File `proB_preB_output_file_GSE160927.csv`
 Contains the SHAP values explaining the model's decisions.
 
@@ -106,8 +107,21 @@ Contains performance metrics for each iteration and fold.
 
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
+### Usage for main.ipynb
+Use this notebook to analyze a pre-trained model and extract biological insights.
 
 
+#### Data
+
+| File                              | Description                                                                   |
+|------------------------------------|------------------------------------------------------------------------|
+| main.ipynb                             | it handles loading pre-trained BINN models and performing iterative SHAP analysis on large-scale scRNA-seq datasets.                            |
+| binn.py                          | Implements the Biologically Informed Neural Network (BINN) using PyTorch Lightning, creating a hierarchical architecture based on biological pathway topology. |
+| DICE.py                            | Implements "Diverse Counterfactual Explanations" logic to improve model robustness and provide alternative explanations for cell fate decisions.                              |
+| explain.py  | Contains the SHAPExplainer class, specialized in calculating and aggregating SHAP values for multi-class cellular data.                                       |
+| explainer.py  | Provides the base BINNExplainer logic, including weight initialization and core routines for computing feature importance across hierarchical layers.                                       |
+| network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
+| plot.py  | A visualization library for generating publication-quality figures, such as Sankey diagrams, to trace biological feature importance through the network.                                       |
 
 ## Citation
 Those codes and the CITMIC package are intended for research use only. 
