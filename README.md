@@ -108,10 +108,13 @@ Contains performance metrics for each iteration and fold.
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
 ### Usage for main.ipynb
-Use this notebook to analyze a pre-trained model and extract biological insights.
-
+The main.ipynb notebook is designed for high-throughput model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
 
 #### Data
+test_input_data:A CSV file where rows are features (Genes) and columns are samples.
+test_input_sign:A CSV mapping samples to their ground-truth labels (e.g., classes 1–24).
+Pre-trained Models:Saved .pth files containing the trained BINN architecture and weights.
+Connectivity Maps:A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
 
 | File                              | Description                                                                   |
 |------------------------------------|------------------------------------------------------------------------|
@@ -122,6 +125,36 @@ Use this notebook to analyze a pre-trained model and extract biological insights
 | explainer.py  | Provides the base BINNExplainer logic, including weight initialization and core routines for computing feature importance across hierarchical layers.                                       |
 | network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
 | plot.py  | A visualization library for generating publication-quality figures, such as Sankey diagrams, to trace biological feature importance through the network.                                       |
+
+#### Configuration & Initialization
+The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
+``` Python (version 3.10.9)
+``` Anaconda
+# Model and Output configuration
+model_path = '/path/to/your/binn_model_tpm.pth'
+output_dir = '/path/to/results/'
+
+shap = SHAPExplainer(
+            input_data=test_input_data, 
+            design_matrix=test_input_sign, 
+            model=model,
+            device="cuda:1"
+        )
+##
+shap.explain(
+            output_dir="/model", 
+            iteration=0
+   
+        )
+##
+shap.explain_cell(
+            output_dir="/model", 
+            iteration=0
+
+        )
+```
+#### Outputs
+
 
 ## Citation
 Those codes and the CITMIC package are intended for research use only. 
