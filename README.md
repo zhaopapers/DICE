@@ -143,30 +143,33 @@ The notebook utilizes the SHAPExplainer to handle the complexity of multi-class 
 model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
-shap = SHAPExplainer(
-            input_data=test_input_data, 
-            design_matrix=test_input_sign, 
-            model=model,
-            device="cuda:1"
-        )
-##Key biological feature identification across differentiation stages via model interpretation
-shap.explain(
-            output_dir="/model", 
-            iteration=0
-   
-        )
-##Quantify key cancer-classifying features across scales.
-shap.explain_cell(
-            output_dir="/model", 
-            iteration=0
-
-        )
+# ================= Analysis Configuration =================
+# Set to True: Calculate SHAP values for EACH individual sample (Sample-level resolution).
+# Set to False: Calculate the MEAN SHAP values across the group (Group-level resolution).
+EXPLAIN_SINGLE_SAMPLE = True 
+# ==========================================================
+# Example execution loop in main.ipynb
+for i in range(1, 10):
+    # ... (model loading) ...
+    
+    if EXPLAIN_SINGLE_SAMPLE:
+        # Initializes the custom SingleSampleExplainer defined in the notebook
+        shap_engine = SingleSampleExplainer(model=model, ...)
+        shap_engine.explain(output_dir="/model", iteration=i)
+        shap_engine.explain_cell(output_dir="/model", iteration=i)
+    else:
+        # Uses the standard library SHAPExplainer
+        shap_engine = OriginalSHAPExplainer(model=model, ...)
+        shap_engine.explain(output_dir="/model", iteration=i)
 ```
 #### Outputs
-`shap_values_iteration_{i}.csv` will be created in the output directory.Feature importance scores mapped to biological pathways for each predicted class.
+`shap_explain_singleSample_iterX.csv` will be created in the output directory.Sample-specific SHAP values for the GO layer, providing feature importance scores for each individual sample.
 
+`shap_cell_singleSample_iterX.csv` will be created in the output directory.Sample-specific SHAP values for the Cell layer, providing feature importance scores for each individual sample.
 
+`shap_explain_iterX.csv` will be created in the output directory.Mean SHAP values for the GO layer, representing the average feature importance across the analyzed group.
 
+`shap_cell_iterX.csv` will be created in the output directory.Mean SHAP values for the Cell layer, representing the average feature importance across the analyzed group.
 
 ## Citation
 Those codes and the CITMIC package are intended for research use only. 
