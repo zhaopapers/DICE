@@ -132,7 +132,7 @@ for i in range(1, 10):
 
 `shap_cell_iterX.csv` will be created in the output directory.Mean SHAP values for the Cell layer, representing the average feature importance across the analyzed group.
 
-#### files
+### Files
 | File                              | Description                                                                   |
 |------------------------------------|------------------------------------------------------------------------|
 | GODP/binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
@@ -147,7 +147,7 @@ for i in range(1, 10):
 | network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
 | plot.py  | A visualization library for generating publication-quality figures, such as Sankey diagrams, to trace biological feature importance through the network.                                       |
 
-#### Data
+### Data
 `test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports both single-cell RNA-seq data (e.g., HSC, B-cell, or T-cell differentiation stages) and bulk tissue data (e.g., TCGA Pan-cancer cohorts).
 
 `test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing ground-truth classes or cell types.
