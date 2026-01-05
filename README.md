@@ -26,30 +26,30 @@ conda env create -f environment.yml
 ## Usage
 
 ### Usage for base_cell.ipynb
-The base_cell.ipynb notebook serves as the main entry point for training the Biologically Informed Neural Network (BINN). 
+The base_cell.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
 
-It orchestrates data loading, network graph construction, model initialization, and the training loop with interpretability analysis.
+It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
 
 #### Data
 
 Before running the notebook, ensure you have prepared the four required CSV files.
 
-`test_input_data:`Gene Expression Matrix,which here refers to single-cell data with genes as rows and cells as columns.
+`input_data:`Gene Expression Matrix,which here refers to single-cell data with genes as rows and cells as columns.
 
-`test_input_sign:`Design Matrix.Must contain:- sample: Matches column names in the expression matrix.- group: Class labels (e.g., 1 and 2) used for stratification.
+`input_sign:`Design Matrix.Must contain:- sample: Matches column names in the expression matrix.- group: Class labels (e.g., 1 and 2) used for stratification.
 
-`test_pathways:`Defines the edges of the biological graph.
+`pathways:`Defines the edges of the biological graph.
 
-`test_translation:`Input Mapping.
+`translation:`Input Mapping.
 
 #### Network Construction
 
 ``` Python (version 3.10.9)
 ``` Anaconda
 network = Network(
-    input_data=test_input_data,
-    pathways=test_pathways,
-    mapping=test_translation,
+    input_data==input_data,
+    pathways==pathways,
+    mapping==translation,
     input_data_column="Gene",  # Column name in your data matrix identifying features
     source_column="source",    # Column name in pathway file for source nodes
     target_column="target"     # Column name in pathway file for target nodes
