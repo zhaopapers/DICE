@@ -30,18 +30,6 @@ The GODP.ipynb notebook serves as the main entry point for training the Gene Ont
 
 It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
 
-#### Data
-
-Before running the notebook, ensure you have prepared the four required CSV files.
-
-`input_data:`Gene Expression Matrix,which here refers to single-cell data with genes as rows and cells as columns.
-
-`input_sign:`Design Matrix.Must contain:- sample: Matches column names in the expression matrix.- group: Class labels (e.g., 1 and 2) used for stratification.
-
-`pathways:`Defines the edges of the biological graph.
-
-`translation:`Input Mapping.
-
 #### Network Construction
 
 ``` Python (version 3.10.9)
@@ -55,27 +43,6 @@ network = Network(
     target_column="target"     # Column name in pathway file for target nodes
 )
 ```
-
-| File                              | Description                                                                   |
-|------------------------------------|------------------------------------------------------------------------|
-| binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
-| network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
-| based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
-| util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
-
-#### Model Hyperparameters
-
-`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
-
-`-activation` is the activation function for hidden layers with a default value of "tanh"; 
-
-`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
-
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
-
-`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
-
-`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
 
 #### Training & Validation
 
@@ -97,6 +64,20 @@ df, return_dict = trainer.fit(
 )
 ```
 
+#### Model Hyperparameters
+
+`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
+
+`-activation` is the activation function for hidden layers with a default value of "tanh"; 
+
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
+
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
+
+`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
+
 #### Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
 
@@ -112,10 +93,12 @@ Contains performance metrics for each iteration and fold.
 
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
+
 ### Usage for main.ipynb
 The main.ipynb notebook is designed for high-throughput model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
 
 #### Data
+`test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.
 
 `test_input_data:` A CSV file where rows are features (Genes) and columns are samples.
 
@@ -125,8 +108,14 @@ The main.ipynb notebook is designed for high-throughput model evaluation and int
 
 `Connectivity Maps:` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
 
+
+
 | File                              | Description                                                                   |
 |------------------------------------|------------------------------------------------------------------------|
+| GODP/binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
+| GODP/network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
+| GODP/based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
+| GODP/util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
 | main.ipynb                             | it handles loading pre-trained BINN models and performing iterative SHAP analysis on large-scale scRNA-seq datasets.                            |
 | binn.py                          | Implements the Biologically Informed Neural Network (BINN) using PyTorch Lightning, creating a hierarchical architecture based on biological pathway topology. |
 | DICE.py                            | Implements "Diverse Counterfactual Explanations" logic to improve model robustness and provide alternative explanations for cell fate decisions.                              |
