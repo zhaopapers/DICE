@@ -25,8 +25,8 @@ conda env create -f environment.yml
 
 ## Usage
 
-### Usage for base_cell.ipynb
-The base_cell.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
+### Usage for GODP.ipynb
+The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
 
 It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
 
