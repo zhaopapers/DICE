@@ -93,36 +93,8 @@ Contains performance metrics for each iteration and fold.
 
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
-
 ### Usage for main.ipynb
 The main.ipynb notebook is designed for high-throughput model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
-
-#### Data
-`test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.
-
-`test_input_data:` A CSV file where rows are features (Genes) and columns are samples.
-
-`test_input_sign:` A CSV mapping samples to their ground-truth labels (e.g., classes 1–24).
-
-`Pre-trained Models:` Saved .pth files containing the trained BINN architecture and weights.
-
-`Connectivity Maps:` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
-
-
-
-| File                              | Description                                                                   |
-|------------------------------------|------------------------------------------------------------------------|
-| GODP/binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
-| GODP/network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
-| GODP/based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
-| GODP/util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
-| main.ipynb                             | it handles loading pre-trained BINN models and performing iterative SHAP analysis on large-scale scRNA-seq datasets.                            |
-| binn.py                          | Implements the Biologically Informed Neural Network (BINN) using PyTorch Lightning, creating a hierarchical architecture based on biological pathway topology. |
-| DICE.py                            | Implements "Diverse Counterfactual Explanations" logic to improve model robustness and provide alternative explanations for cell fate decisions.                              |
-| explain.py  | Contains the SHAPExplainer class, specialized in calculating and aggregating SHAP values for multi-class cellular data.                                       |
-| explainer.py  | Provides the base BINNExplainer logic, including weight initialization and core routines for computing feature importance across hierarchical layers.                                       |
-| network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
-| plot.py  | A visualization library for generating publication-quality figures, such as Sankey diagrams, to trace biological feature importance through the network.                                       |
 
 #### Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
@@ -159,6 +131,35 @@ for i in range(1, 10):
 `shap_explain_iterX.csv` will be created in the output directory.Mean SHAP values for the GO layer, representing the average feature importance across the analyzed group.
 
 `shap_cell_iterX.csv` will be created in the output directory.Mean SHAP values for the Cell layer, representing the average feature importance across the analyzed group.
+
+#### files
+| File                              | Description                                                                   |
+|------------------------------------|------------------------------------------------------------------------|
+| GODP/binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
+| GODP/network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
+| GODP/based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
+| GODP/util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
+| main.ipynb                             | it handles loading pre-trained BINN models and performing iterative SHAP analysis on large-scale scRNA-seq datasets.                            |
+| binn.py                          | Implements the Biologically Informed Neural Network (BINN) using PyTorch Lightning, creating a hierarchical architecture based on biological pathway topology. |
+| DICE.py                            | Implements "Diverse Counterfactual Explanations" logic to improve model robustness and provide alternative explanations for cell fate decisions.                              |
+| explain.py  | Contains the SHAPExplainer class, specialized in calculating and aggregating SHAP values for multi-class cellular data.                                       |
+| explainer.py  | Provides the base BINNExplainer logic, including weight initialization and core routines for computing feature importance across hierarchical layers.                                       |
+| network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
+| plot.py  | A visualization library for generating publication-quality figures, such as Sankey diagrams, to trace biological feature importance through the network.                                       |
+
+#### Data
+`test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports both single-cell RNA-seq data (e.g., HSC, B-cell, or T-cell differentiation stages) and bulk tissue data (e.g., TCGA Pan-cancer cohorts).
+
+`test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing ground-truth classes or cell types.
+
+`Pre-trained Models:` Saved .pth files containing the trained BINN architecture and weights.
+
+`Connectivity Maps:` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
+
+`Benchmark.csv:`A comprehensive log of model performance across iterations, including metrics such as train_acc, test_f1, macro_precision, and specific dataset accuracies (e.g., ICGC, TCGA).
+
+`Supplementary Table.xlsx`The datasets used in this study cover fundamental immune cell differentiation processes and a comprehensive pan-cancer landscape.
+
 
 ## Citation
 Those codes and the CITMIC package are intended for research use only. 
