@@ -122,28 +122,52 @@ return_dict= trainer.fit(test_input_data,
 #### Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
 
+# ==========================================================
+# Example execution loop in explain.ipynb
 # Model and Output configuration
 model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
-# ================= Analysis Configuration =================
+# ================= Model Interpretation =================
+
+#  Calculate the MEAN SHAP values across the group (Group-level resolution).
+
+shap = SHAPExplainer(
+            input_data=test_input_data, 
+            design_matrix=test_input_sign, 
+            model=model,
+            device="cuda:0"
+        )
+
+shap.explain_cell(
+            output_dir="/model", 
+            iteration=0
+
+        )
+
+shap = SHAPExplainer(
+            input_data=test_input_data, 
+            design_matrix=test_input_sign, 
+            model=model,
+            device="cuda:1"
+        )
+
+shap.explain(
+            output_dir="/model", 
+            iteration=0
+   
+        )
+
 # Set to True: Calculate SHAP values for EACH individual sample (Sample-level resolution).
-# Set to False: Calculate the MEAN SHAP values across the group (Group-level resolution).
-EXPLAIN_SINGLE_SAMPLE = True 
-# ==========================================================
-# Example execution loop in main.ipynb
-for i in range(1, 10):
-    # ... (model loading) ...
-    
-    if EXPLAIN_SINGLE_SAMPLE:
-        # Initializes the custom SingleSampleExplainer defined in the notebook
-        shap_engine = SingleSampleExplainer(model=model, ...)
-        shap_engine.explain(output_dir="/model", iteration=i)
-        shap_engine.explain_cell(output_dir="/model", iteration=i)
-    else:
-        # Uses the standard library SHAPExplainer
-        shap_engine = OriginalSHAPExplainer(model=model, ...)
-        shap_engine.explain(output_dir="/model", iteration=i)
+
+
+shap_dict = explainer._explain_cell_layer(
+            test_data, y, background_data
+            )
+df_GO = explainer.shap_single_G0(shap_dict,y,connectivity_matrices_list,target_key)
+df_cell = explainer.shap_single_cell(shap_dict,y)  
+
+
 ```
 #### Outputs
 `shap_explain_singleSample_iterX.csv` will be created in the output directory.Sample-specific SHAP values for the GO layer, providing feature importance scores for each individual sample.
