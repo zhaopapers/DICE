@@ -26,9 +26,7 @@ conda env create -f environment.yml
 
 
 ## Usage
-``` Python (version 3.10.9)
-``` Anaconda
-```
+
 ### Construction of GODP learning module 
 #### Usage for GODP.ipynb
 The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
