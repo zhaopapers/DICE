@@ -120,17 +120,18 @@ return_dict= trainer.fit(test_input_data,
                         num_workers=0,
                         gene_list=gene_list)
 ```
-#### Configuration & Initialization
+## Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
 
 
-# Example execution loop in explain.ipynb
+
 # Model and Output configuration
+
 model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
-# ================= Model Interpretation =================
-
+## ================= Model Interpretation =================
+Example execution loop in explain.ipynb
 #  Calculate the MEAN SHAP values across the group (Group-level resolution).
 ```
 shap = SHAPExplainer(
