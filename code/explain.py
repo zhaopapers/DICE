@@ -234,8 +234,7 @@ class SHAPExplainer:
         groups=list(range(1, 25)), 
         n_folds=3,
         test_size=0.15, 
-        val_size=0.15,  
-        random_state=42
+        val_size=0.15
     ):
         y = []
         dfs = []
