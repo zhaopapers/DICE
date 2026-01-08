@@ -72,17 +72,29 @@ df, return_dict = trainer.fit(
 
 #### Model Hyperparameters
 
-`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
+`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4(only used in GODP); 
 
-`-activation` is the activation function for hidden layers with a default value of "tanh"; 
+`-activation` is the activation function for hidden layers with a default value of "tanh"(only used in GODP); 
 
-`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"(only used in GODP); 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2(only used in GODP); 
 
-`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001(only used in GODP); 
 
-`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
+`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
+
+`-nr_iterations` is the number of training repetitions to perform to ensure robustness, with a default value of 10(only used in GODP);
+
+`-max_epochs` is the maximum number of training epochs per fold, with a default value of 100(only used in GODP);
+
+`-batch_size` is the number of samples per batch during training, with a default value of 16(only used in GODP);
+
+`-n_folds` is the number of cross-validation folds to use, with a default value of 3(only used in GODP);
+
+`-num_workers` is the number of CPU subprocesses used for data loading, with a default value of 20(only used in GODP);
+
+`-dir` is the directory path where the model checkpoints (.pth) and interpretation files (.pkl) will be saved(only used in GODP).
 
 #### Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
@@ -129,35 +141,35 @@ return_dict= trainer.fit(test_input_data,
 ```
 #### Model Hyperparameters
 
-`-activation` is the activation function for hidden layers with a default value of "tanh"; 
+`-activation` is the activation function for hidden layers with a default value of "tanh"(only used in DICE); 
 
-`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"(only used in DICE); 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2(only used in DICE); 
 
-`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001(only used in DICE); 
 
-`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
+`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda"(only used in DICE);
 
-`-nr_iterations` is the number of complete training cycles to run with a default value of 1;
+`-nr_iterations` is the number of complete training cycles to run with a default value of 1(only used in DICE);
 
-`-max_epochs` is the maximum number of training epochs per fold with a default value of 100;
+`-max_epochs` is the maximum number of training epochs per fold with a default value of 100(only used in DICE);
 
-`-batch_size` is the number of samples processed before the model is updated with a default value of 32;
+`-batch_size` is the number of samples processed before the model is updated with a default value of 32(only used in DICE);
 
-`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation with a default value of 3;
+`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation with a default value of 3(only used in DICE);
 
-`-val_size` is the proportion of data reserved for validation with a default value of 0.2;
+`-val_size` is the proportion of data reserved for validation with a default value of 0.2(only used in DICE);
 
-`-test_size` is the proportion of data reserved for testing with a default value of 0.2;
+`-test_size` is the proportion of data reserved for testing with a default value of 0.2(only used in DICE);
 
-`-temperature_init` is the initial value for temperature scaling used in probability calibration with a default value of 1.0;
+`-temperature_init` is the initial value for temperature scaling used in probability calibration with a default value of 1.0(only used in DICE);
 
-`-num_workers` is the number of CPU subprocesses to use for data loading with a default value of 0;
+`-num_workers` is the number of CPU subprocesses to use for data loading with a default value of 0(only used in DICE);
 
-`-connectivity_matrices_list` is the dictionary containing sparse matrices that define the biological network topology;
+`-connectivity_matrices_list` is the dictionary containing sparse matrices that define the biological network topology(only used in DICE);
 
-`-gene_list` is the list of genes used to filter the input data to ensure intersection with the network features.
+`-gene_list` is the list of genes used to filter the input data to ensure intersection with the network features(only used in DICE).
 
 #### Model and Output configuration
 
@@ -209,8 +221,6 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 #### Model Hyperparameters
 
 `-model` is the trained BINN model object loaded from a saved checkpoint (e.g., .pth file);
-
-`-device` is the compute device (e.g., "cuda:0" or "cuda:1") used for calculating SHAP values with a default value of "cuda:0";
 
 `-output_dir` is the directory path where the resulting SHAP explanation CSV files (e.g., shap_cell_iter0.csv) will be saved;
 
