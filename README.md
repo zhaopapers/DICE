@@ -30,10 +30,10 @@ conda env create -f environment.yml
 ``` Anaconda
 ```
 ### Construction of GODP learning module 
-Usage for GODP.ipynb
+#### Usage for GODP.ipynb
 The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
 It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
-# Network Construction
+#### Network Construction
 ```
 network = Network(
     input_data==input_data,
@@ -45,8 +45,7 @@ network = Network(
 )
 ```
 
-## Training & Validation
-
+#### Training & Validation
 The training process is handled by the based_cell_train wrapper, which performs Stratified K-Fold cross-validation and SHAP-based feature importance calculation.
 To start training, execute the relevant cell in the notebook:
 ```
@@ -73,7 +72,7 @@ df, return_dict = trainer.fit(
 )
 ```
 
-## Model Hyperparameters
+#### Model Hyperparameters
 
 `-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
 
@@ -87,7 +86,7 @@ df, return_dict = trainer.fit(
 
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
 
-# Outputs
+#### Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
 
 1. Feature Importance File `cell_output_file.csv`
@@ -103,7 +102,7 @@ Contains performance metrics for each iteration and fold.
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
 ### Construction of DICE  
-## Usage for main.ipynb
+#### Usage for main.ipynb
 The main.ipynb notebook is designed for construction of DICE, model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
 ```
 binn = BINN(
@@ -130,19 +129,19 @@ return_dict= trainer.fit(test_input_data,
                         num_workers=0,
                         gene_list=gene_list)
 ```
-## Configuration & Initialization
+#### Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
 
 
 
-# Model and Output configuration
+#### Model and Output configuration
 
 model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
-# Model Interpretation
+### Model Interpretation
 Example execution loop in explain.ipynb
-Calculate the MEAN SHAP values across the group (Group-level resolution).
+#### Calculate the MEAN SHAP values across the group (Group-level resolution).
 ```
 shap = SHAPExplainer(
             input_data=test_input_data, 
@@ -170,7 +169,7 @@ shap.explain(
    
         )
 ```
-# Set to True: Calculate SHAP values for EACH individual sample (Sample-level resolution).
+#### Calculate SHAP values for EACH individual sample (Sample-level resolution).
 
 ```
 shap_dict = explainer._explain_cell_layer(
