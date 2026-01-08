@@ -138,9 +138,7 @@ model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
 ### Model Interpretation
-#### Example execution loop in explain.ipynb
-
-
+The explain.ipynb notebook implements model interpretability analysis by calculating SHAP (SHapley Additive exPlanations) values to quantify feature importance.
 ```
 Calculate the MEAN SHAP values across the group (Group-level resolution).
 shap = SHAPExplainer(
