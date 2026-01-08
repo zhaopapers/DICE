@@ -50,6 +50,16 @@ network = Network(
 The training process is handled by the based_cell_train wrapper, which performs Stratified K-Fold cross-validation and SHAP-based feature importance calculation.
 To start training, execute the relevant cell in the notebook:
 ```
+binn = BINN(
+    network=network,
+    activation = "tanh",
+    activation_final = "sigmoid",
+    n_layers=4,
+    dropout=0.2,
+    validate=False,
+    device="cuda",
+    learning_rate=0.001,
+) 
 trainer = based_cell_train(binn, explainer)
 df, return_dict = trainer.fit(
     input_data=test_input_data,
