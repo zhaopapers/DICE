@@ -123,7 +123,7 @@ return_dict= trainer.fit(test_input_data,
 #### Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
 
-# ==========================================================
+
 # Example execution loop in explain.ipynb
 # Model and Output configuration
 model_path = '/path/to/your/binn_model_tpm.pth'
