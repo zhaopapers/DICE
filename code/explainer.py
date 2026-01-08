@@ -23,8 +23,6 @@ class BINNExplainer:
         self.model = model
         self.model.eval()
         self.device = model.device
-      
-
         self.batchnorm_np = nn.BatchNorm1d(7057, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True).to(self.device)
         if multiprocessing.get_start_method(allow_none=True) is None:
             multiprocessing.set_start_method("spawn")
@@ -38,8 +36,6 @@ class BINNExplainer:
         dataloader,
         fast_train: bool,
     ) -> (pd.DataFrame, dict):
-
-
         dfs = {}
         metrics_dict = {}
         for iteration in range(nr_iterations):
@@ -55,7 +51,6 @@ class BINNExplainer:
                 trainer.fit(self.model, dataloader)
             df = self.explain(test_data, background_data)
             dfs[iteration] = df
-
         col_names = [f"value_{n}" for n in range(len(list(dfs.keys())))]
         values = [df.value.values for df in dfs.values()]
         values = np.array(values)
@@ -91,27 +86,21 @@ class BINNExplainer:
             min_features_per_layer=min_features_per_layer,
             early_stopping=early_stopping,
         )
-
         self.rpe_model = rpe.get_final_model()
         self.rpe_data = rpe.get_final_data()
-
         return return_dict
 
     def _forward_residual_subnet(self, subnet, x: torch.Tensor) -> torch.Tensor:
         
-        x =x.to("cuda:1")
-     
+        x =x.to("cuda:0")
         for name, layer in subnet.named_children():
-
-                x = layer(x)
-                
+                x = layer(x)          
         return x
     def _forward_residual(self, x: torch.Tensor):
         x_final = torch.tensor([], device=self.device)
         x = x.to(self.device)
         Gene_input = self.batchnorm_np(x)
         gene_in_x_list = []
-
         for name, layer in self.cell_layers.named_children():
             if name.startswith("differentiation"):
                 x = layer(x)
@@ -126,7 +115,6 @@ class BINNExplainer:
                 gene_in_x_list.append(gene_output.detach().cpu().numpy())
             else:
                 x = layer(x)
-
         return x_final, gene_in_x_list
     def _forward_long_subnet(self,subset, x: torch.Tensor,batchnorm_np,device) -> torch.Tensor:
         x_final = torch.tensor([], device=device)
@@ -134,29 +122,20 @@ class BINNExplainer:
         Gene_input = x.to(device)
         gene_output = None
         gene_outputs_list = []
-        index = 1
-  
         for name, layer in subset.named_children():
-
             if name.startswith("differentiation"):
-            
-                
                 x = layer(x)
                 x_final = torch.cat((x_final, x), dim=1)
             elif name.startswith("Gene_in"):
-           
                 x = layer(x)  
                 test_data = batchnorm_np(Gene_input)
                 x = (test_data + x) / 2
                 y = subset[index+1](x)  
                 y = subset[index+2](y)        
-                    
-                
                 gene_output = y
                 gene_outputs_list.append(gene_output.detach().cpu().numpy())
             else:
                 x = layer(x)
-          
         return gene_outputs_list,x_final       
 
                       
@@ -170,16 +149,12 @@ class BINNExplainer:
             background_data = background_data.to(device)
             test_data = test_data.to(device)
             partial_shap_dict = {"features": [], "shap_values": []}
-
             intermediate_data = test_data.to(device)
             if subnet_name in ["HSC_B_cell_layers", "HSC_CD8_cell_Tcm_layers", "HSC_CD8_cell_Tem_layers", "HSC_CD4_cell_Th1_layers", "HSC_CD4_cell_Th2_layers", "HSC_CD4_cell_Th17_layers", "HSC_CD4_cell_Tfh_layers", "HSC_CD4_cell_Treg_layers"]:
                 x_final=None
-    
                 #print(layer_name)       
                 for name, layer in subnet.named_children():
-                    
-                    if isinstance(layer, nn.Linear):
-                                
+                    if isinstance(layer, nn.Linear):      
                         explainer = shap.DeepExplainer(
                                         (subnet, layer), 
                                         background_data 
@@ -195,10 +170,7 @@ class BINNExplainer:
                 Gene_list_back =x_gene_list_back[subnet_name]
                 Gene_list_test =x_gene_list_test[subnet_name]
                 for i in range(len(Gene_list_back)):
-                    
                     subnet_name_subset = subnet_name_[i]
-                   
-
                     Gene_back = Gene_list_back[i]
                     Gene_test = Gene_list_test[i]
                     feature_index = 0
@@ -209,7 +181,6 @@ class BINNExplainer:
                     layer_name = layer_names[subnet_name]                       
                     layer_name = layer_name[6*(i+1):(6*(i+1)+4)]
                     #print(layer_name)
-                    
                     back_data_tensor = torch.from_numpy(intermediate_data_back).float()                  
                     test_data_tensor = torch.from_numpy(intermediate_data_test).float()  
 
@@ -220,8 +191,7 @@ class BINNExplainer:
                     intermediate_data_back = back_data_tensor        
                     intermediate_data_test = test_data_tensor
                     for name, layer in subnet_su.named_children():
-                        if isinstance(layer, nn.Linear):
-                                      
+                        if isinstance(layer, nn.Linear):    
                             explainer = shap.DeepExplainer(
                                                 (subnet_su, layer), 
                                                 back_data_tensor  
@@ -232,32 +202,24 @@ class BINNExplainer:
                             feature_index += 1
                             intermediate_data_back = layer(intermediate_data_back)
                             intermediate_data_test = layer(intermediate_data_test)
-               
-                
             return partial_shap_dict
                     
         finally:
-         
             gc.collect()
             torch.cuda.empty_cache()
     def _explain_layer1(
             self, background_data: torch.Tensor, test_data: torch.Tensor,device
         ) -> dict:
-
-
             self.model = self.model.to(device)
             test_data = test_data.to(device)
             background_data = background_data.to(device)
             print(test_data.shape)
             print(background_data.shape)
-
             def deep_model_list(deep_cell_name,num):
                 model_list = nn.ModuleList(list(deep_cell_name.children()))   
                 layers = nn.Sequential(*model_list[:num])
                 return layers
-
             subnets = {
-                
                 'HSC_B_cell_layers': deep_model_list(self.model.B_cell_layers,16),
                 'HSC_CD8_cell_Tcm_layers': deep_model_list(self.model.CD8_cell_Tcm_layers,16),
                 'HSC_CD8_cell_Tem_layers': deep_model_list(self.model.CD8_cell_Tem_layers,16),
@@ -274,12 +236,9 @@ class BINNExplainer:
                 'CD4_cell_Th17_layers': self.model.CD4_cell_Th17_layers,
                 'CD4_cell_Tfh_layers': self.model.CD4_cell_Tfh_layers,
                 'CD4_cell_Treg_layers': self.model.CD4_cell_Treg_layers
-
-
             }
 
             layer_names = {
-                
                 'HSC_B_cell_layers': self.model.B_cell_layer_names[:4],
                 'HSC_CD8_cell_Tcm_layers': self.model.CD8_cell_Tcm_layer_names[:4],
                 'HSC_CD8_cell_Tem_layers': self.model.CD8_cell_Tem_layer_names[:4],
@@ -288,7 +247,6 @@ class BINNExplainer:
                 'HSC_CD4_cell_Th17_layers': self.model.CD4_cell_Th17_layer_names[:4],
                 'HSC_CD4_cell_Tfh_layers': self.model.CD4_cell_Tfh_layer_names[:4],
                 'HSC_CD4_cell_Treg_layers': self.model.CD4_cell_Treg_layer_names[:4],
-
                 'B_cell_layers': self.model.B_cell_layer_names,
                 'CD8_cell_Tcm_layers': self.model.CD8_cell_Tcm_layer_names,
                 'CD8_cell_Tem_layers': self.model.CD8_cell_Tem_layer_names,
@@ -298,8 +256,6 @@ class BINNExplainer:
                 'CD4_cell_Tfh_layers': self.model.CD4_cell_Tfh_layer_names,
                 'CD4_cell_Treg_layers': self.model.CD4_cell_Treg_layer_names
             }
-  
-
             layer_cell_types = {
                 'B_cell_layers': ["CLP_B_cell_layers","Pro_B_cell_layers","Pre_B_cell_layers","immature_B_cell_layers","mature_B_cell_layers"],
                 'CD8_cell_Tcm_layers': ["CLP_CD8_cell_Tcm_layers","Pro_CD8_cell_Tcm_layers","Pre_CD8_cell_Tcm_layers","naive_CD8_cell_Tcm_layers","Teff_CD8_cell_Tcm_layers"],
@@ -312,18 +268,11 @@ class BINNExplainer:
             }
             shap_dict = {"features": [], "shap_values": []}
             shap_dict_cell = {"features": [], "shap_values": []}
-
-
-
-                         
-
-
             shap_dict = {"features": [], "shap_values": []}
-        
             x_final_list_back = {
             
             "B_cell_layers":[],    
-            
+
             "CD8_cell_Tcm_layers":[],
           
             "CD8_cell_Tem_layers":[],
@@ -393,10 +342,6 @@ class BINNExplainer:
             "CD4_cell_Treg_layers":[]
             }          
             shap_dict = {"features": [], "shap_values": []}
-        
-                
-     
-
             #combined_output = torch.cat([self._forward_residual_subnet(subnet, test_data) for subnet in subnets.values()], dim=1)
             combined_output_test = x_final_list_test 
             combined_output_back = x_final_list_back 
@@ -473,8 +418,7 @@ class BINNExplainer:
                     x_gene_list_test[key]=Gene_list_test
                     current_list = layer_cell_types[key]
                     cell_final_layer_name = cell_final_layer_name + ([subnet_name] * 16)
-                    cell_final_layer_name.extend([element for element in current_list for _ in range(16)])                        
-                                        
+                    cell_final_layer_name.extend([element for element in current_list for _ in range(16)])                                              
                 elif subnet_name ==  "HSC_CD4_cell_Th17_layers":
                     with torch.no_grad():
                         self.model.cell_layers = self.model.CD4_cell_Th17_layers
@@ -516,9 +460,6 @@ class BINNExplainer:
                     cell_final_layer_name.extend([element for element in current_list for _ in range(16)])
                 else:
                     continue
-
-
-            
             with ProcessPoolExecutor(mp_context=multiprocessing.get_context("spawn"), max_workers=5) as executor:
                 futures = []
                 for subnet_name, subnet in subnets.items():
@@ -530,8 +471,6 @@ class BINNExplainer:
                     
                     shap_dict["features"].extend(partial_shap_dict["features"])
                     shap_dict["shap_values"].extend(partial_shap_dict["shap_values"])
-        
-
             keys_order = [
                           "B_cell_layers",
                         
@@ -549,47 +488,27 @@ class BINNExplainer:
                     
                         "CD4_cell_Treg_layers"
                         ]  
-
-
             outputs = []
-
             outputs = [x_final_list_test[key] for key in keys_order]    
-            print(outputs)
             for i, output in enumerate(outputs):
-             
-                
                 if isinstance(output, list):
                     outputs[i] = torch.tensor(output).to(device)
             combined_output = torch.cat(outputs, dim=1)
-
-            print(combined_output.shape) 
-
             outputs_back = []
-
             outputs_back = [x_final_list_back[key] for key in keys_order]    
             print(outputs_back)
             for i, output in enumerate(outputs_back):
-
                 if isinstance(output, list):
                     outputs_back[i] = torch.tensor(output).to(device)
             combined_output_back = torch.cat(outputs_back, dim=1)
-
             print(combined_output_back.shape) 
-                
             outputs_test = []
-
             outputs_test = [x_final_list_test[key] for key in keys_order]    
-            print(outputs_test)
             for i, output in enumerate(outputs_test):
 
                 if isinstance(output, list):
                     outputs_test[i] = torch.tensor(output).to(device)
             combined_output_test = torch.cat(outputs_test, dim=1)
-
-            print(combined_output_test.shape) 
-           
-     
-
             
             for name, layer in self.model.final_layers.named_children():
                 if isinstance(layer, nn.Linear):
@@ -664,13 +583,6 @@ class BINNExplainer:
             
             shap_dict_cell = {"features": [], "shap_values": []}
 
-
-
-                            #print(subnet_name)
-
-
-          
-            # 主循环
             x_final_list = {
             
             "B_cell_layers":[],    
@@ -688,15 +600,9 @@ class BINNExplainer:
             "CD4_cell_Tfh_layers":[],
          
             "CD4_cell_Treg_layers":[]
-            }
-           
-           
-       
+            }      
 
-            #combined_output = torch.cat([self._forward_residual_subnet(subnet, test_data) for subnet in subnets.values()], dim=1)
-            combined_output = x_final_list 
-          
-           
+            combined_output = x_final_list          
             batchnorm_np = nn.BatchNorm1d(7057, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True).to("cuda:1")
 
             cell_final_layer_name = []
@@ -779,11 +685,6 @@ class BINNExplainer:
                     cell_final_layer_name.extend([element for element in current_list for _ in range(16)])
                 else:
                     continue
-
-
-            
-            
-
             keys_order = [
                           "B_cell_layers",
                         
@@ -801,8 +702,6 @@ class BINNExplainer:
                     
                         "CD4_cell_Treg_layers"
                         ]  
-
-
             outputs = []
 
             outputs = [x_final_list[key] for key in keys_order]
@@ -812,29 +711,16 @@ class BINNExplainer:
                 if isinstance(output, list):
                     outputs[i] = torch.tensor(output).to("cuda:1")
             combined_output = torch.cat(outputs, dim=1)
-
-            print(combined_output.shape) 
-          
-
             
             for name, layer in self.model.final_layers.named_children():
                 if isinstance(layer, nn.Linear):
                     explainer = shap.DeepExplainer((self.model.final_layers, layer), combined_output)
-                    shap_values = explainer.shap_values(combined_output, check_additivity=False)
-                    
+                    shap_values = explainer.shap_values(combined_output, check_additivity=False)                  
                     shap_dict_cell["features"].append(cell_final_layer_name)
                     shap_dict_cell["shap_values"].append(shap_values)
-
-                 
-                   
                     combined_output = layer(combined_output)
 
                 elif isinstance(layer, (nn.Tanh, nn.ReLU, nn.LeakyReLU)):
-                    
-                    combined_output = layer(combined_output)
-
-
-           
-            
+                    combined_output = layer(combined_output)   
             return shap_dict_cell
             
