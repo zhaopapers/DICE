@@ -4,7 +4,6 @@ import torch
 from lightning.pytorch import LightningModule
 from torch import nn as nn
 from torch.nn.utils import prune as prune
-from .network import Network
 from sklearn.metrics import precision_score
 from torchmetrics.classification import MulticlassF1Score
 from sklearn.metrics import roc_auc_score
