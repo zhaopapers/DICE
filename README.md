@@ -127,10 +127,6 @@ return_dict= trainer.fit(test_input_data,
                         num_workers=0,
                         gene_list=gene_list)
 ```
-#### Configuration & Initialization
-The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
-
-
 
 #### Model and Output configuration
 
