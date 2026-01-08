@@ -130,9 +130,9 @@ The notebook utilizes the SHAPExplainer to handle the complexity of multi-class 
 model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
-## ================= Model Interpretation =================
+# Model Interpretation
 Example execution loop in explain.ipynb
-#  Calculate the MEAN SHAP values across the group (Group-level resolution).
+Calculate the MEAN SHAP values across the group (Group-level resolution).
 ```
 shap = SHAPExplainer(
             input_data=test_input_data, 
