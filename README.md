@@ -28,12 +28,13 @@ conda env create -f environment.yml
 ## Usage
 ``` Python (version 3.10.9)
 ``` Anaconda
+```
 ### Construction of GODP learning module 
 Usage for GODP.ipynb
 The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
 It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
 # Network Construction
-
+```
 network = Network(
     input_data==input_data,
     pathways==pathways,
@@ -48,7 +49,7 @@ network = Network(
 
 The training process is handled by the based_cell_train wrapper, which performs Stratified K-Fold cross-validation and SHAP-based feature importance calculation.
 To start training, execute the relevant cell in the notebook:
-
+```
 trainer = based_cell_train(binn, explainer)
 df, return_dict = trainer.fit(
     input_data=test_input_data,
@@ -94,7 +95,7 @@ Contains performance metrics for each iteration and fold.
 ### Construction of DICE  
 ## Usage for main.ipynb
 The main.ipynb notebook is designed for construction of DICE, model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
-
+```
 binn = BINN(
     activation = "tanh",
     activation_final = "sigmoid",
@@ -118,7 +119,7 @@ return_dict= trainer.fit(test_input_data,
                         max_epochs=100,
                         num_workers=0,
                         gene_list=gene_list)
-
+```
 #### Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
 
@@ -131,7 +132,7 @@ output_dir = '/path/to/results/'
 # ================= Model Interpretation =================
 
 #  Calculate the MEAN SHAP values across the group (Group-level resolution).
-
+```
 shap = SHAPExplainer(
             input_data=test_input_data, 
             design_matrix=test_input_sign, 
@@ -157,10 +158,10 @@ shap.explain(
             iteration=0
    
         )
-
+```
 # Set to True: Calculate SHAP values for EACH individual sample (Sample-level resolution).
 
-
+```
 shap_dict = explainer._explain_cell_layer(
             test_data, y, background_data
             )
