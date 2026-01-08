@@ -27,69 +27,6 @@ class BINNExplainer:
         if multiprocessing.get_start_method(allow_none=True) is None:
             multiprocessing.set_start_method("spawn")
 
-    def explain_average(
-        self,
-        test_data: torch.Tensor,
-        background_data: torch.Tensor,
-        nr_iterations: int,
-        max_epochs: int,
-        dataloader,
-        fast_train: bool,
-    ) -> (pd.DataFrame, dict):
-        dfs = {}
-        metrics_dict = {}
-        for iteration in range(nr_iterations):
-            print(f"Iteration {iteration}")
-            self.model.reset_params()
-            self.model.init_weights()
-            if fast_train:
-                optimizer = self.model.configure_optimizers()[0][0]
-                self.model, return_dict = self.fast_train(dataloader, max_epochs, optimizer)
-                metrics_dict[iteration] = return_dict
-            else:
-                trainer = pl.Trainer(max_epochs=max_epochs)
-                trainer.fit(self.model, dataloader)
-            df = self.explain(test_data, background_data)
-            dfs[iteration] = df
-        col_names = [f"value_{n}" for n in range(len(list(dfs.keys())))]
-        values = [df.value.values for df in dfs.values()]
-        values = np.array(values)
-        values_mean = np.mean(values, axis=0)
-        values_std = np.std(values, axis=0)
-        df = dfs[0].copy()
-        df.drop(columns=["value"], inplace=True)
-        df[col_names] = values.T
-        df["value_mean"] = values_mean
-        df["values_std"] = values_std
-        df["value"] = values_mean
-        return df, metrics_dict
-
-    def recursive_pathway_elimination(
-        self,
-        input_data,
-        design_matrix,
-        nr_iterations: int = 20,
-        max_epochs: int = 50,
-        clip_threshold=1e-5,
-        constant_removal_rate=0.05,
-        min_features_per_layer=3,
-        early_stopping=True,
-    ):
-        rpe = RecursivePathwayElimination(self.model, self)
-        return_dict = rpe.fit(
-            input_data=input_data,
-            design_matrix=design_matrix,
-            nr_iterations=nr_iterations,
-            max_epochs=max_epochs,
-            clip_threshold=clip_threshold,
-            constant_removal_rate=constant_removal_rate,
-            min_features_per_layer=min_features_per_layer,
-            early_stopping=early_stopping,
-        )
-        self.rpe_model = rpe.get_final_model()
-        self.rpe_data = rpe.get_final_data()
-        return return_dict
-
     def _forward_residual_subnet(self, subnet, x: torch.Tensor) -> torch.Tensor:
         
         x =x.to("cuda:0")
@@ -207,7 +144,110 @@ class BINNExplainer:
         finally:
             gc.collect()
             torch.cuda.empty_cache()
-    def _explain_layer1(
+    from collections import defaultdict
+    def shap_single_cell(shap_dict,samples,connectivity_matrices_list,target_key):
+    
+        feature_dict = {
+                "name": [],
+                "source name": [],
+                "target name": [], 
+                "type": [],
+                "source layer":[],
+                "target layer": [],                  
+            }
+        for sample in samples:
+            feature_dict[sample] = []  
+        feature_id_mapping = {}
+        feature_id = 0
+        feature_id_mapping["root"] = feature_id
+        for layer_features in shap_dict["features"]:
+            for feature in layer_features:
+                feature_id += 1
+                feature_id_mapping[feature] = feature_id
+    
+        feature_id_mapping = {}
+        feature_id = 0
+        feature_id_mapping["root"] = feature_id
+        for layer_features in shap_dict["features"]:
+            for feature in layer_features:
+                feature_id += 1
+                feature_id_mapping[feature] = feature_id
+        values_cell = np.asarray(shap_dict["shap_values"][-1])  
+        values_cell = abs(values_cell)
+        values_cell_mean = np.mean(values_cell, axis=0)
+        element = []
+        first_elements = [vector[0] for vector in shap_dict["features"][:-1]]
+        index_dict  = defaultdict(list)
+        for index, item in enumerate(shap_dict["features"][-1]):
+            index_dict[item].append(index)
+            element.append(item) 
+        element = set(element)
+        prefix_indices = {prefix: [] for prefix in element}
+    
+        for index, item in enumerate(first_elements):
+            for prefix in element:
+                if item.startswith(prefix):
+                    prefix_indices[prefix].append(index)
+    
+        for prefix, indices in prefix_indices.items():
+            print(f"Prefix '{prefix}' found at indices: {indices}")
+    
+        merged_dict = {}
+        for key in prefix_indices:
+    
+            layers = prefix_indices[key]
+            values = index_dict.get(key, [])
+            merged_dict[key] = [layers, values]
+    
+        merged_dict[target_key]
+        first = merged_dict[target_key][0]
+        second = merged_dict[target_key][1]
+        name = target_key
+    
+        shap_dict_items = {"features":[], "shap_values":[]}
+        connectivity_matrices_list_items = []
+        for idx in first:
+            shap_dict_items["shap_values"].append(shap_dict["shap_values"][idx])
+            shap_dict_items["features"].append(shap_dict["features"][idx])
+            connectivity_matrices_list_items.append(connectivity_matrices_list[idx])
+        result_second = values_cell_mean[second]  
+        curr_layer = 0
+    
+    
+        for sv, features, cm  in zip(
+                shap_dict_items["shap_values"], shap_dict_items["features"], connectivity_matrices_list_items
+        ):
+            sv = np.asarray(sv)
+            sv_mean_final =  sv @ result_second   
+            for feature in range(sv_mean_final.shape[1]):
+    
+                n_classes = sv_mean_final.shape[2]
+                modified_string = features[feature].replace(name+'_', '')
+                connections = cm[cm.index == modified_string]
+                connections = connections.loc[
+                        :, (connections != 0).any(axis=0)
+                ]  
+                for target in connections:
+                    for curr_class in range(n_classes):
+                        if curr_class != 1:
+                            continue 
+                        feature_dict["name"].append(name)
+                        feature_dict["source name"].append(features[feature])
+                        feature_dict["target name"].append(name + "_" + target)
+                        feature_dict["type"].append(curr_class)
+                        feature_dict["source layer"].append(curr_layer)
+                        feature_dict["target layer"].append(curr_layer + 1)
+                        sample_index = 0
+                        for sample in samples:                    
+                            feature_dict[sample].append(sv_mean_final[sample_index][feature][curr_class])
+                            sample_index = sample_index + 1    
+            curr_layer += 1
+        df = pd.DataFrame(data=feature_dict)
+        output_file = '/model/shap_GO_teff_Tcm_0.csv'
+        df.to_csv(output_file, index=False)
+        return df
+
+    def _explain_layer(
             self, background_data: torch.Tensor, test_data: torch.Tensor,device
         ) -> dict:
             self.model = self.model.to(device)
