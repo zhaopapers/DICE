@@ -161,9 +161,9 @@ class based_cell_train:
             self.background_data = torch.Tensor(
                 np.concatenate([X_train, X_val, X_test], axis=0)
             ).to(self.device)
-            torch.save(self.model, '/home/zxl/hdd/cellfate/model/binn_model_{}_tpm_100_16.pth'.format(iteration))
+            torch.save(self.model, '/model/binn_model_{}_tpm_100_16.pth'.format(iteration))
             variables_to_save = { 'X_test': X_test, 'y_test': y_test, "features":feature}
-            filename = '/home/zxl/hdd/cellfate/model/test_{}_tpm_100_16.pkl'.format(iteration)              
+            filename = '/model/test_{}_tpm_100_16.pkl'.format(iteration)              
             with open(filename, 'wb') as f:
                 dill.dump(variables_to_save, f)
             return_dict["test_acc"].append(test_accs)
@@ -222,3 +222,4 @@ class based_cell_train:
             features = list(features)
             data_matrix = data_matrix.loc[features]
         return data_matrix ,features
+
