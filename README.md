@@ -127,6 +127,37 @@ return_dict= trainer.fit(test_input_data,
                         num_workers=0,
                         gene_list=gene_list)
 ```
+#### Model Hyperparameters
+
+`-activation` is the activation function for hidden layers with a default value of "tanh"; 
+
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
+
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
+
+`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
+
+`-nr_iterations` is the number of complete training cycles to run with a default value of 1;
+
+`-max_epochs` is the maximum number of training epochs per fold with a default value of 100;
+
+`-batch_size` is the number of samples processed before the model is updated with a default value of 32;
+
+`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation with a default value of 3;
+
+`-val_size` is the proportion of data reserved for validation with a default value of 0.2;
+
+`-test_size` is the proportion of data reserved for testing with a default value of 0.2;
+
+`-temperature_init` is the initial value for temperature scaling used in probability calibration with a default value of 1.0;
+
+`-num_workers` is the number of CPU subprocesses to use for data loading with a default value of 0;
+
+`-connectivity_matrices_list` is the dictionary containing sparse matrices that define the biological network topology;
+
+`-gene_list` is the list of genes used to filter the input data to ensure intersection with the network features.
 
 #### Model and Output configuration
 
@@ -175,6 +206,22 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 
 
 ```
+#### Model Hyperparameters
+
+`-model` is the trained BINN model object loaded from a saved checkpoint (e.g., .pth file);
+
+`-device` is the compute device (e.g., "cuda:0" or "cuda:1") used for calculating SHAP values with a default value of "cuda:0";
+
+`-output_dir` is the directory path where the resulting SHAP explanation CSV files (e.g., shap_cell_iter0.csv) will be saved;
+
+`-iteration` is an integer index used to suffix the output filenames to track different explanation runs with a default value of 0;
+
+`-target_key` is the specific pathway or layer name to focus on when generating single Gene Ontology (GO) term explanations (e.g., "Teff_CD8_cell_Tcm_layers");
+
+`-background_data` is the reference dataset (tensor) derived from training data, used by the SHAP DeepExplainer as the background distribution;
+
+`-test_data` is the target dataset (tensor) for which SHAP values are calculated to explain the model's predictions. 
+
 #### Outputs
 `shap_explain_singleSample_iterX.csv` will be created in the output directory.Sample-specific SHAP values for the GO layer, providing feature importance scores for each individual sample.
 
