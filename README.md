@@ -140,9 +140,11 @@ model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
 
 ### Model Interpretation
-Example execution loop in explain.ipynb
-#### Calculate the MEAN SHAP values across the group (Group-level resolution).
+#### Example execution loop in explain.ipynb
+
+
 ```
+Calculate the MEAN SHAP values across the group (Group-level resolution).
 shap = SHAPExplainer(
             input_data=test_input_data, 
             design_matrix=test_input_sign, 
@@ -169,9 +171,10 @@ shap.explain(
    
         )
 ```
-#### Calculate SHAP values for EACH individual sample (Sample-level resolution).
+
 
 ```
+Calculate SHAP values for EACH individual sample (Sample-level resolution).
 shap_dict = explainer._explain_cell_layer(
             test_data, y, background_data
             )
