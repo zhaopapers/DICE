@@ -23,17 +23,17 @@ installing Anaconda, you can create a virtual environment named DICE and install
 conda env create -f environment.yml
 ```
 
+
+
 ## Usage
-
-### Usage for GODP.ipynb
-The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
-
-It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
-
-#### Network Construction
-
 ``` Python (version 3.10.9)
 ``` Anaconda
+### Construction of GODP learning module 
+Usage for GODP.ipynb
+The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
+It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
+# Network Construction
+
 network = Network(
     input_data==input_data,
     pathways==pathways,
@@ -44,13 +44,11 @@ network = Network(
 )
 ```
 
-#### Training & Validation
+## Training & Validation
 
 The training process is handled by the based_cell_train wrapper, which performs Stratified K-Fold cross-validation and SHAP-based feature importance calculation.
 To start training, execute the relevant cell in the notebook:
 
-``` Python (version 3.10.9)
-``` Anaconda
 trainer = based_cell_train(binn, explainer)
 df, return_dict = trainer.fit(
     input_data=test_input_data,
@@ -64,7 +62,7 @@ df, return_dict = trainer.fit(
 )
 ```
 
-#### Model Hyperparameters
+## Model Hyperparameters
 
 `-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
 
@@ -78,13 +76,13 @@ df, return_dict = trainer.fit(
 
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda".
 
-#### Outputs
+# Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
 
-1. Feature Importance File `proB_preB_output_file_GSE160927.csv`
+1. Feature Importance File `cell_output_file.csv`
 Contains the SHAP values explaining the model's decisions.
 
-2. Metrics File `proB_preB_return_dict_GSE160927.csv`
+2. Metrics File `cell_return_dict.csv`
 Contains performance metrics for each iteration and fold.
 
 3. Located in the directory specified by the dir parameter in trainer.fit():
@@ -93,13 +91,37 @@ Contains performance metrics for each iteration and fold.
 
 `variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
 
-### Usage for main.ipynb
-The main.ipynb notebook is designed for high-throughput model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
+### Construction of DICE  
+## Usage for main.ipynb
+The main.ipynb notebook is designed for construction of DICE, model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
+
+binn = BINN(
+    activation = "tanh",
+    activation_final = "sigmoid",
+    connectivity_matrices_list = data,
+    dropout=0.2,
+    validate=False,
+    device="cuda:0",
+    learning_rate=0.001,
+)
+
+trainer = DICE(binn)
+return_dict= trainer.fit(test_input_data,
+                        test_input_sign,
+                        nr_iterations=1,
+                        temperature_init=1.0,
+                        connectivity_matrices_list = data,
+                        batch_size=32,
+                        n_folds=3,
+                        val_size = 0.2,
+                        test_size = 0.2,
+                        max_epochs=100,
+                        num_workers=0,
+                        gene_list=gene_list)
 
 #### Configuration & Initialization
 The notebook utilizes the SHAPExplainer to handle the complexity of multi-class biological networks.
-``` Python (version 3.10.9)
-``` Anaconda
+
 # Model and Output configuration
 model_path = '/path/to/your/binn_model_tpm.pth'
 output_dir = '/path/to/results/'
