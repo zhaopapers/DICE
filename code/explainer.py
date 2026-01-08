@@ -145,7 +145,7 @@ class BINNExplainer:
             gc.collect()
             torch.cuda.empty_cache()
     from collections import defaultdict
-    def shap_single_cell(shap_dict,samples,connectivity_matrices_list,target_key):
+    def shap_single_GO(shap_dict,samples,connectivity_matrices_list,target_key):
     
         feature_dict = {
                 "name": [],
@@ -247,6 +247,40 @@ class BINNExplainer:
         df.to_csv(output_file, index=False)
         return df
 
+    def shap_single_cell(shap_dict,samples):
+        feature_dict = {
+                        "name": [],
+                        "type": [],  
+                }
+        for sample in samples:
+            feature_dict[sample] = []        
+            feature_id_mapping = {}
+            feature_id = 0
+            feature_id_mapping["root"] = feature_id
+            for layer_features in shap_dict["features"]:
+                for feature in layer_features:
+                    feature_id += 1
+                    feature_id_mapping[feature] = feature_id
+    
+            curr_layer = 0
+            for sv, features in zip(
+                                shap_dict["shap_values"], shap_dict["features"]
+            ):
+                sv = np.asarray(sv)
+                for feature in range(sv.shape[1]):
+                    n_classes = sv.shape[2]
+                    for curr_class in range(n_classes):
+                        feature_dict["name"].append(features[feature])
+                        feature_dict["type"].append(curr_class)                 
+                        sample_index = 0
+                        for sample in samples: 
+                            feature_dict[sample].append(sv[sample_index][feature][curr_class])
+                            sample_index = sample_index + 1
+                curr_layer += 1
+                print(curr_layer)
+            df = pd.DataFrame(data=feature_dict)
+            output_file = '{}shap_cell.csv'.format(dir)
+            df.to_csv(output_file, index=False)
     def _explain_layer(
             self, background_data: torch.Tensor, test_data: torch.Tensor,device
         ) -> dict:
