@@ -56,7 +56,8 @@ binn = BINN(
     validate=False,
     device="cuda",
     learning_rate=0.001,
-) 
+)
+explainer = BINNExplainer(binn)
 trainer = based_cell_train(binn, explainer)
 df, return_dict = trainer.fit(
     input_data=test_input_data,
