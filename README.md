@@ -73,29 +73,33 @@ df, return_dict = trainer.fit(
 
 #### Model Hyperparameters
 
-`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4(only used in GODP); 
+`test_input_data:` is gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports (e.g., HSC, B-cell, or T-cell differentiation stages) both single-cell RNA-seq data.
 
-`-activation` is the activation function for hidden layers with a default value of "tanh"(only used in GODP); 
+`test_input_sign:` is a CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing cell types.
 
-`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"(only used in GODP); 
+`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4(used in GODP); 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2(only used in GODP); 
+`-activation` is the activation function for hidden layers with a default value of "tanh"(used in GODP); 
 
-`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001(only used in GODP); 
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"(used in GODP); 
+
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2(used in GODP); 
+
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001(used in GODP); 
 
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
 
-`-nr_iterations` is the number of training repetitions to perform to ensure robustness, with a default value of 10(only used in GODP);
+`-nr_iterations` is the number of training repetitions to perform to ensure robustness, with a default value of 10(used in GODP);
 
-`-max_epochs` is the maximum number of training epochs per fold, with a default value of 100(only used in GODP);
+`-max_epochs` is the maximum number of training epochs per fold, with a default value of 100(used in GODP);
 
-`-batch_size` is the number of samples per batch during training, with a default value of 16(only used in GODP);
+`-batch_size` is the number of samples per batch during training, with a default value of 16(used in GODP);
 
-`-n_folds` is the number of cross-validation folds to use, with a default value of 3(only used in GODP);
+`-n_folds` is the number of cross-validation folds to use, with a default value of 3(used in GODP);
 
-`-num_workers` is the number of CPU subprocesses used for data loading, with a default value of 20(only used in GODP);
+`-num_workers` is the number of CPU subprocesses used for data loading, with a default value of 20(used in GODP);
 
-`-dir` is the directory path where the model checkpoints (.pth) and interpretation files (.pkl) will be saved(only used in GODP).
+`-dir` is the directory path where the model checkpoints (.pth) and interpretation files (.pkl) will be saved(used in GODP).
 
 #### Outputs
 After execution, the notebook generates two primary CSV files and several checkpoints:
@@ -141,6 +145,10 @@ return_dict= trainer.fit(test_input_data,
                         gene_list=gene_list)
 ```
 #### Model Hyperparameters
+
+`test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports both single-cell RNA-seq data (e.g., HSC, B-cell, or T-cell differentiation stages) and bulk tissue data (e.g., TCGA Pan-cancer cohorts).
+
+`test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing ground-truth classes or cell types.
 
 `-activation` is the activation function for hidden layers with a default value of "tanh"(only used in DICE); 
 
@@ -249,6 +257,7 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 | GODP/binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
 | GODP/network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
 | GODP/based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
+| GODP/explainer.py                            | SHAP for interpretability analysis for GODP                              |
 | GODP/util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
 | main.ipynb                             | it handles loading pre-trained BINN models and performing iterative SHAP analysis on large-scale scRNA-seq datasets.                            |
 | binn.py                          | Implements the Biologically Informed Neural Network (BINN) using PyTorch Lightning, creating a hierarchical architecture based on biological pathway topology. |
@@ -258,9 +267,6 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 | network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
 
 ### Data
-`test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports both single-cell RNA-seq data (e.g., HSC, B-cell, or T-cell differentiation stages) and bulk tissue data (e.g., TCGA Pan-cancer cohorts).
-
-`test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing ground-truth classes or cell types.
 
 `Pre-trained Models:` Saved .pth files containing the trained BINN architecture and weights.
 
