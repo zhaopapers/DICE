@@ -19,6 +19,7 @@ class based_cell_train:
         self.explainer = explainer
         print(self.activation_final)
         self.connectivity_matrices = model.connectivity_matrices
+        self.device = model.device
 
     def fit(
         self,
@@ -87,7 +88,7 @@ class based_cell_train:
                     activation_final= self.activation_final,
                     scheduler="plateau",
                     learning_rate=self.learning_rate,
-                    device="cuda:1"
+                    device = self.device
                     
                 )
                 X_train, y_train, X_val, y_val, X_test, y_test = split
@@ -159,7 +160,7 @@ class based_cell_train:
                 )
                 self.explainer.update_model(self.model)
                 variables_to_save = { 'test_data': self.test_data}
-                filename = '/home/zxl/hdd/lsy/model_Th2/variables{}_fold{}.pkl'.format(iteration, i)
+                filename = '/model_Th2/variables{}_fold{}.pkl'.format(iteration, i)
                 print(filename)
                 with open(filename, 'wb') as f:
                     dill.dump(variables_to_save, f)
@@ -238,14 +239,14 @@ class based_cell_train:
             return_dict["trainable_params"].append(self.model.trainable_params)
             return_dict["models"].append(self.model)
             return_dict["iteration"].append(iteration)
-            '''    # 保存 df 到 CSV 文件，追加模式
+            '''    
             output_file = 'CLP_proB_output_file.csv'
             if os.path.exists(output_file):
                 df.to_csv(output_file, mode='a', index=False, header=False)
             else:
                 df.to_csv(output_file, index=False)
 
-                # 保存 return_dict 到 CSV 文件，追加模式
+
             return_dict_df = pd.DataFrame.from_dict(return_dict, orient='index')
             return_dict_file = 'CLP_proB_return_dict.csv'
             if os.path.exists(return_dict_file):
@@ -346,3 +347,4 @@ class based_cell_train:
             data_matrix.set_index(feature_column, inplace=True)
             data_matrix = data_matrix.loc[features]
         return data_matrix
+
