@@ -57,10 +57,11 @@ class BINN(pl.LightningModule):
         n_outputs: int = 2,
         dropout: float = 0,
         residual: bool = False,
-        device: str = "cuda:2",
+        device: str = "cuda:0",
     ):
         super().__init__()
-        self.to(device)
+        self.deivie = device
+        self.to(self.deivie)
         self.test_labels = []
         self.test_probs = []
         self.residual = residual
