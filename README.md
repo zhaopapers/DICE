@@ -17,7 +17,7 @@ DICE: Decoding Immune Cell Differentiation for Tumor-Type Prediction and Mechani
 
 
 ## Environment set up
-installing Anaconda, you can create a virtual environment named DICE and install the required packages based on the environment.yml file using the following command:
+Installing Anaconda, you can create a virtual environment named DICE and install the required packages based on the environment.yml file using the following command:
 ``` Python (version 3.10.9)
 ``` Anaconda
 conda env create -f environment.yml
@@ -75,17 +75,17 @@ df, return_dict = trainer.fit(
 
 #### Model Hyperparameters
 
-`-test_input_data:` is gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports (e.g., HSC, B-cell, or T-cell differentiation stages) single-cell RNA-seq data.
+`-test_input_data:` is a gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns. Supports (e.g., HSC, B-cell, or T-cell differentiation stages) single-cell RNA-seq data.
 
-`-test_input_sign:` is a CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column representing cell types.
+`-test_input_sign:` is a CSV file providing the metadata for each cell. Must include a sample column (matching test_input_data columns) and a group column representing cell types.
 
-`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
+`-n_layers` is the number of hidden layers (biological hierarchy levels) to use, with a default value of 4; 
 
 `-activation` is the activation function for hidden layers with a default value of "tanh"; 
 
 `-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+`-dropout` is the dropout rate to prevent overfitting, with a default value of 0.2; 
 
 `-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
 
@@ -105,7 +105,7 @@ df, return_dict = trainer.fit(
 
 ### Construction of DICE  
 #### Usage for main.ipynb
-The main.ipynb notebook is designed for construction of DICE, model evaluation and interpretability.
+The main.ipynb notebook is designed for constructing the DICE model, evaluating the model.
 ```
 binn = BINN(
     activation = "tanh",
@@ -133,35 +133,35 @@ return_dict= trainer.fit(test_input_data,
 ```
 #### Model Hyperparameters
 
-`-test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports bulk tissue data (e.g., TCGA Pan-cancer cohorts).
+`-test_input_data:` is a gene Expression Matrix, which here refers to bulk-tissue data with genes as rows and samples as columns. Supports bulk tissue data (e.g., TCGA Pan-cancer cohorts).
 
-`-test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing tumor classes.
+`-test_input_sign:` is a CSV file providing the metadata for each sample. Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing tumor classes.
 
 `-activation` is the activation function for hidden layers with a default value of "tanh"; 
 
 `-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
+`-dropout` is the dropout rate to prevent overfitting, with a default value of 0.2; 
 
 `-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
 
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
 
-`-nr_iterations` is the number of complete training cycles to run with a default value of 1;
+`-nr_iterations` is the number of complete training cycles to run, with a default value of 1;
 
-`-max_epochs` is the maximum number of training epochs per fold with a default value of 100;
+`-max_epochs` is the maximum number of training epochs per fold, with a default value of 100;
 
-`-batch_size` is the number of samples processed before the model is updated with a default value of 32;
+`-batch_size` is the number of samples processed before the model is updated, with a default value of 32;
 
-`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation with a default value of 3;
+`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation, with a default value of 3;
 
-`-val_size` is the proportion of data reserved for validation with a default value of 0.2;
+`-val_size` is the proportion of data reserved for validation, with a default value of 0.15;
 
-`-test_size` is the proportion of data reserved for testing with a default value of 0.2;
+`-test_size` is the proportion of data reserved for testing, with a default value of 0.15;
 
 `-temperature_init` is the initial value for temperature scaling used in probability calibration with a default value of 1.0;
 
-`-num_workers` is the number of CPU subprocesses to use for data loading with a default value of 0;
+`-num_workers` is the number of CPU subprocesses to use for data loading, with a default value of 0;
 
 `-connectivity_matrices_list` is the dictionary containing sparse matrices that define the biological network topology;
 
@@ -171,7 +171,7 @@ return_dict= trainer.fit(test_input_data,
 #### Usage for explain.ipynb
 The explain.ipynb notebook implements model interpretability analysis by calculating SHAP (SHapley Additive exPlanations) values to quantify feature importance.
 ```
-Calculate the MEAN SHAP values across the group (Group-level resolution).
+Calculate the MEAN SHAP values across the tumor class (Group-level resolution).
 shap = SHAPExplainer(
             input_data=test_input_data, 
             design_matrix=test_input_sign, 
@@ -212,13 +212,13 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 ```
 #### Model Hyperparameters
 
-`-model` is the trained BINN model object loaded from a saved checkpoint (e.g., .pth file);
+`-model` is the trained DICE model object loaded from a saved checkpoint (e.g., .pth file);
 
 `-output_dir` is the directory path where the resulting SHAP explanation CSV files (e.g., shap_cell_iter0.csv) will be saved;
 
 `-iteration` is an integer index used to suffix the output filenames to track different explanation runs with a default value of 0;
 
-`-target_key` is the specific pathway or layer name to focus on when generating single Gene Ontology (GO) term explanations (e.g., "Teff_CD8_cell_Tcm_layers");
+`-target_key` is the specific pathway or gene to focus on when generating single cell differentiation process explanations (e.g., "Teff_CD8_cell_Tcm_layers");
 
 `-background_data` is the reference dataset (tensor) derived from training data, used by the SHAP DeepExplainer as the background distribution;
 
@@ -228,23 +228,21 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 | File                              | Description                                                                   |
 |------------------------------------|------------------------------------------------------------------------|
 | GODP/binn.py                             | Defines the core architecture of the BINN model based on PyTorch Lightning, responsible for dynamically constructing hierarchical neural networks according to biological pathway topologies.                            |
-| GODP/network.py                          | Responsible for building biological directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
+| GODP/network.py                          | Responsible for building biologically directed graphs and converting the mapping relationships between pathways and genes into connection matrices required between layers of the neural network. |
 | GODP/based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
 | GODP/explainer.py                            | SHAP for interpretability analysis for GODP                              |
 | GODP/util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
-| main.ipynb                             | it handles loading pre-trained BINN models and performing iterative SHAP analysis on large-scale scRNA-seq datasets.                            |
-| binn.py                          | Implements the Biologically Informed Neural Network (BINN) using PyTorch Lightning, creating a hierarchical architecture based on biological pathway topology. |
-| DICE.py                            | Implements "Diverse Counterfactual Explanations" logic to improve model robustness and provide alternative explanations for cell fate decisions.                              |
-| explain.py  | Contains the SHAPExplainer class, specialized in calculating and aggregating SHAP values for multi-class cellular data.                                       |
-| explainer.py  | Provides the base BINNExplainer logic, including weight initialization and core routines for computing feature importance across hierarchical layers.                                       |
-| network.py  | A graph-theory utility that converts biological pathway relations into connectivity matrices and masks for the neural network layers.                                       |
+| binn.py                          | Implemented a Biological Information Neural Network (BINN) using the PyTorch Lightning framework, constructing a hierarchical network architecture that integrates prior knowledge of cell differentiation processes and biological pathway topological structures. |
+| DICE.py                            | The core driving module of the DICE tumor classification model integrates various components to achieve end-to-end cancer subtype prediction.                              |
+| explain.py  | SHAP values ​​of multi-class tumor samples and performing cross-sample aggregation analysis.                                       |
+| explainer.py  | Provides the BINNExplainer base class, enabling systematic calculation of weight initialization strategies and hierarchical feature importance.                                       |
 
 ### Data
 
 
-`Gene_and_network.pkl` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types base on GODP.
+`Gene_and_network.pkl` A serialized .pkl file (e.g., Gene_and_network.pkl) containing a list of genes used as input for the model, and connectivity matrices for different cell types generated based on GODP.
 
-`Benchmark.csv:`A comprehensive log of model performance across iterations, including metrics such as train_acc, test_f1, macro_precision, and specific dataset accuracies (e.g., ICGC, TCGA).
+`Benchmark.csv:`A comprehensive log of model performance across iterations, including metrics such as ACC, F1, recall macro_precision, and specific dataset accuracies (e.g., ICGC, TCGA).
 
 `Supplementary Table.xlsx`The datasets used in this study cover fundamental immune cell differentiation processes and a comprehensive pan-cancer landscape.
 
