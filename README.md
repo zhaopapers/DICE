@@ -232,10 +232,10 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 | GODP/based_cell_train.py                            | Encapsulates the complete training workflow, responsible for executing stratified K-fold cross-validation, model fitting, and calling SHAP for interpretability analysis.                              |
 | GODP/explainer.py                            | SHAP for interpretability analysis for GODP                              |
 | GODP/util_for_examples.py  | Provides auxiliary tools for data preprocessing, mainly used to align gene expression matrices with network input features and generate standardized training data.                                       |
-| binn.py                          | Implemented a Biological Information Neural Network (BINN) using the PyTorch Lightning framework, constructing a hierarchical network architecture that integrates prior knowledge of cell differentiation processes and biological pathway topological structures. |
-| DICE.py                            | The core driving module of the DICE tumor classification model integrates various components to achieve end-to-end cancer subtype prediction.                              |
-| explain.py  | SHAP values ​​of multi-class tumor samples and performing cross-sample aggregation analysis.                                       |
-| explainer.py  | Provides the BINNExplainer base class, enabling systematic calculation of weight initialization strategies and hierarchical feature importance.                                       |
+| binn.py                          | The core implementation of the biological information neural network (BINN) is built using PyTorch Lightning, integrating prior knowledge of cell differentiation processes and biological pathway topological structures to form a hierarchical network architecture. |
+| DICE.py                            |The DICE model's main program integrates various functional modules to drive a complete tumor classification workflow.                              |
+| explain.py  | The SHAP interpreter implements the SHAPExplainer class, supporting the calculation of SHAP values ​​for multi-class samples and cross-sample aggregation analysis.                                       |
+| explainer.py  | The base class for model explanation provides the basic framework for BINNExplainer, including weight initialization and the core logic for hierarchical feature importance calculation.                                       |
 
 ### Data
 
