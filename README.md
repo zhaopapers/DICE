@@ -22,7 +22,10 @@ installing Anaconda, you can create a virtual environment named DICE and install
 ``` Anaconda
 conda env create -f environment.yml
 ```
-
+To clone our model, install github and run:
+``` 
+git clone https://github.com/zhaopapers/DICE.git
+```
 
 
 ## Usage
@@ -73,48 +76,33 @@ df, return_dict = trainer.fit(
 
 #### Model Hyperparameters
 
-`test_input_data:` is gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports (e.g., HSC, B-cell, or T-cell differentiation stages) both single-cell RNA-seq data.
+`-test_input_data:` is gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports (e.g., HSC, B-cell, or T-cell differentiation stages) single-cell RNA-seq data.
 
-`test_input_sign:` is a CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing cell types.
+`-test_input_sign:` is a CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column representing cell types.
 
-`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4(used in GODP); 
+`-n_layers` is the number of hidden layers (biological hierarchy levels) to use with a default value of 4; 
 
-`-activation` is the activation function for hidden layers with a default value of "tanh"(used in GODP); 
+`-activation` is the activation function for hidden layers with a default value of "tanh"; 
 
-`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"(used in GODP); 
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2(used in GODP); 
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
 
-`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001(used in GODP); 
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
 
 `-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
 
-`-nr_iterations` is the number of training repetitions to perform to ensure robustness, with a default value of 10(used in GODP);
+`-nr_iterations` is the number of training repetitions to perform to ensure robustness, with a default value of 10);
 
-`-max_epochs` is the maximum number of training epochs per fold, with a default value of 100(used in GODP);
+`-max_epochs` is the maximum number of training epochs per fold, with a default value of 100;
 
-`-batch_size` is the number of samples per batch during training, with a default value of 16(used in GODP);
+`-batch_size` is the number of samples per batch during training, with a default value of 16;
 
-`-n_folds` is the number of cross-validation folds to use, with a default value of 3(used in GODP);
+`-n_folds` is the number of cross-validation folds to use, with a default value of 3;
 
-`-num_workers` is the number of CPU subprocesses used for data loading, with a default value of 20(used in GODP);
+`-num_workers` is the number of CPU subprocesses used for data loading, with a default value of 20;
 
-`-dir` is the directory path where the model checkpoints (.pth) and interpretation files (.pkl) will be saved(used in GODP).
-
-#### Outputs
-After execution, the notebook generates two primary CSV files and several checkpoints:
-
-1. Feature Importance File `cell_output_file.csv`
-Contains the SHAP values explaining the model's decisions.
-
-2. Metrics File `cell_return_dict.csv`
-Contains performance metrics for each iteration and fold.
-
-3. Located in the directory specified by the dir parameter in trainer.fit():
-
-`model_inter{iteration}_fold{fold}.pth: `Saved model weights.
-
-`variables{iteration}_fold{fold}.pkl: `Serialized test data used for SHAP explanation.
+`-dir` is the directory path where the model checkpoints (.pth) and interpretation files (.pkl) will be saved.
 
 ### Construction of DICE  
 #### Usage for main.ipynb
@@ -146,44 +134,39 @@ return_dict= trainer.fit(test_input_data,
 ```
 #### Model Hyperparameters
 
-`test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports both single-cell RNA-seq data (e.g., HSC, B-cell, or T-cell differentiation stages) and bulk tissue data (e.g., TCGA Pan-cancer cohorts).
+`-test_input_data:` Gene Expression Matrix, which here refers to single-cell data with genes as rows and cells as columns.Supports bulk tissue data (e.g., TCGA Pan-cancer cohorts).
 
-`test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing ground-truth classes or cell types.
+`-test_input_sign:` A CSV file providing the metadata for each sample or cell.Must include a sample column (matching test_input_data columns) and a group column (numeric labels, e.g., 1–24) representing tumor classes.
 
-`-activation` is the activation function for hidden layers with a default value of "tanh"(only used in DICE); 
+`-activation` is the activation function for hidden layers with a default value of "tanh"; 
 
-`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"(only used in DICE); 
+`-activation_final` is the activation function for the final classification layer/residual blocks with a default value of "sigmoid"; 
 
-`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2(only used in DICE); 
+`-dropout` is the dropout rate to prevent overfitting with a default value of 0.2; 
 
-`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001(only used in DICE); 
+`-learning_rate` is the initial learning rate for the Adam optimizer with a default value of 0.001; 
 
-`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda"(only used in DICE);
+`-device` is the compute device ("cpu" or "cuda") with a default value of "cuda";
 
-`-nr_iterations` is the number of complete training cycles to run with a default value of 1(only used in DICE);
+`-nr_iterations` is the number of complete training cycles to run with a default value of 1;
 
-`-max_epochs` is the maximum number of training epochs per fold with a default value of 100(only used in DICE);
+`-max_epochs` is the maximum number of training epochs per fold with a default value of 100;
 
-`-batch_size` is the number of samples processed before the model is updated with a default value of 32(only used in DICE);
+`-batch_size` is the number of samples processed before the model is updated with a default value of 32;
 
-`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation with a default value of 3(only used in DICE);
+`-n_folds` is the number of folds for Stratified Shuffle Split cross-validation with a default value of 3;
 
-`-val_size` is the proportion of data reserved for validation with a default value of 0.2(only used in DICE);
+`-val_size` is the proportion of data reserved for validation with a default value of 0.2;
 
-`-test_size` is the proportion of data reserved for testing with a default value of 0.2(only used in DICE);
+`-test_size` is the proportion of data reserved for testing with a default value of 0.2;
 
-`-temperature_init` is the initial value for temperature scaling used in probability calibration with a default value of 1.0(only used in DICE);
+`-temperature_init` is the initial value for temperature scaling used in probability calibration with a default value of 1.0;
 
-`-num_workers` is the number of CPU subprocesses to use for data loading with a default value of 0(only used in DICE);
+`-num_workers` is the number of CPU subprocesses to use for data loading with a default value of 0;
 
-`-connectivity_matrices_list` is the dictionary containing sparse matrices that define the biological network topology(only used in DICE);
+`-connectivity_matrices_list` is the dictionary containing sparse matrices that define the biological network topology;
 
-`-gene_list` is the list of genes used to filter the input data to ensure intersection with the network features(only used in DICE).
-
-#### Model and Output configuration
-
-model_path = '/path/to/your/binn_model_tpm.pth'
-output_dir = '/path/to/results/'
+`-gene_list` is the list of genes used to filter the input data to ensure intersection with the network features.
 
 ### Model Interpretation
 #### Usage for explain.ipynb
@@ -241,15 +224,6 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 `-background_data` is the reference dataset (tensor) derived from training data, used by the SHAP DeepExplainer as the background distribution;
 
 `-test_data` is the target dataset (tensor) for which SHAP values are calculated to explain the model's predictions. 
-
-#### Outputs
-`shap_explain_singleSample_iterX.csv` will be created in the output directory.Sample-specific SHAP values for the GO layer, providing feature importance scores for each individual sample.
-
-`shap_cell_singleSample_iterX.csv` will be created in the output directory.Sample-specific SHAP values for the Cell layer, providing feature importance scores for each individual sample.
-
-`shap_explain_iterX.csv` will be created in the output directory.Mean SHAP values for the GO layer, representing the average feature importance across the analyzed group.
-
-`shap_cell_iterX.csv` will be created in the output directory.Mean SHAP values for the Cell layer, representing the average feature importance across the analyzed group.
 
 ### Files
 | File                              | Description                                                                   |
