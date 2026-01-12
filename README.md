@@ -241,9 +241,8 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 
 ### Data
 
-`Pre-trained Models:` Saved .pth files containing the trained BINN architecture and weights.
 
-`Connectivity Maps:` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types.
+`Gene_and_network.pkl` A serialized .pkl file (e.g., Gene_and_network.pkl) containing connectivity matrices for different cell types base on GODP.
 
 `Benchmark.csv:`A comprehensive log of model performance across iterations, including metrics such as train_acc, test_f1, macro_precision, and specific dataset accuracies (e.g., ICGC, TCGA).
 
