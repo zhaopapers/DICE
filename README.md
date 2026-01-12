@@ -8,7 +8,7 @@ DICE: Decoding Immune Cell Differentiation for Tumor-Type Prediction and Mechani
 
 ## Introduction
 
-`DICE` can combines prior knowledge of immune cell differentiation with biological processes to construct a biologically neural network model for tumor type prediction. This is a novel approach  employed feature attribution techniques to conduct an introspective analysis of the model, thereby identifying key immune cell types, biological processes, and genes within differentiation processes that distinguish different cancer types. In conclusion, DICE has been demonstrated to provide a novel tool for clinical pathological diagnosis, offering new insights into the mechanisms of immune cell differentiation within the tumor microenvironment.
+`DICE` can combine prior knowledge of immune cell differentiation with biological processes to construct a biologically neural network model for tumor type prediction. Moreover, it conducts an introspective analysis of the model, thereby identifying key immune cell differentiation processes, biological processes and genes across different cancer types. 
 
 ![A simple schema of the DICE](Figure/figure.jpg)
 
