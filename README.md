@@ -33,7 +33,6 @@ git clone https://github.com/zhaopapers/DICE.git
 ### Construction of GODP learning module 
 #### Usage for GODP.ipynb
 The GODP.ipynb notebook serves as the main entry point for training the Gene Ontology Biological Process(GODP) learning module. 
-It includes data loading, network graph construction, model initialization, and cell subprocess interpretability analysis.
 #### Network Construction
 ```
 network = Network(
@@ -106,7 +105,7 @@ df, return_dict = trainer.fit(
 
 ### Construction of DICE  
 #### Usage for main.ipynb
-The main.ipynb notebook is designed for construction of DICE, model evaluation and interpretability. It allows you to load pre-trained BINN models and perform iterative SHAP (SHapley Additive exPlanations) analysis to identify key biological drivers in multi-class datasets (e.g., different cell types in scRNA-seq).
+The main.ipynb notebook is designed for construction of DICE, model evaluation and interpretability.
 ```
 binn = BINN(
     activation = "tanh",
