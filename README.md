@@ -193,7 +193,7 @@ shap = SHAPExplainer(
             input_data=test_input_data, 
             design_matrix=test_input_sign, 
             model=model,
-            device="cuda:1"
+            device="cuda:0"
         )
 
 shap.explain(
