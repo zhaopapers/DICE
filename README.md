@@ -59,8 +59,11 @@ binn = BINN(
     device="cuda",
     learning_rate=0.001,
 )
+
 explainer = BINNExplainer(binn)
+
 trainer = based_cell_train(binn, explainer)
+
 df, return_dict = trainer.fit(
     input_data=test_input_data,
     design_matrix=test_input_sign,
@@ -118,6 +121,7 @@ binn = BINN(
 )
 
 trainer = DICE(binn)
+
 return_dict= trainer.fit(test_input_data,
                         test_input_sign,
                         nr_iterations=1,
@@ -205,7 +209,9 @@ Calculate SHAP values for EACH individual sample (Sample-level resolution).
 shap_dict = explainer._explain_cell_layer(
             test_data, y, background_data
             )
+
 df_GO = explainer.shap_single_G0(shap_dict,y,connectivity_matrices_list,target_key)
+
 df_cell = explainer.shap_single_cell(shap_dict,y)  
 
 
