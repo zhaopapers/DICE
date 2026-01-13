@@ -239,9 +239,9 @@ df_cell = explainer.shap_single_cell(shap_dict,y)
 
 ### Data
 `Benchmark.csv:`A comprehensive log of model performance across iterations, including metrics such as ACC, F1, recall macro_precision, and specific dataset accuracies (e.g., ICGC, TCGA).
-
 `Supplementary Table.xlsx`The datasets used in this study cover fundamental immune cell differentiation processes and a comprehensive pan-cancer landscape.
-The Other datasets used to train and test different models can be downloaded from the data.zip link: https://zenodo.org/. 
+
+The Other datasets used to train and test different models can be downloaded from the data.zip link: [https://zenodo.org/](https://zenodo.org/records/18228726). 
 
 
 
